@@ -167,11 +167,21 @@ module BoardHelper
     SVG
   end
 
+  def ordered_display_states
+    configured =
+      if defined?(PGBOARD_CONFIG) && PGBOARD_CONFIG.board.status_map
+        PGBOARD_CONFIG.board.status_map.values.uniq
+      else
+        DISPLAY_STATES.map { |s| s[:id] }
+      end
+    configured.map { |id| state_meta(id) }
+  end
+
   def state_step_index(display_status)
-    DISPLAY_STATES.index { |s| s[:id] == display_status } || 0
+    ordered_display_states.index { |s| s[:id] == display_status } || 0
   end
 
   def state_total_steps
-    DISPLAY_STATES.size - 1
+    ordered_display_states.size - 1
   end
 end

@@ -60,7 +60,7 @@
     </span>
   </div>
   <div class="pg-ladder">
-    <% BoardHelper::DISPLAY_STATES.each_with_index do |s, i| %>
+    <% ordered_display_states.each_with_index do |s, i| %>
       <% if i <= step_idx %>
         <span style="background:<%= s[:color] %>;"></span>
       <% else %>

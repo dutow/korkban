@@ -12,7 +12,7 @@
   accent = accent_palette[(epic.jira_key.to_s.bytes.sum % accent_palette.size)]
 
   # mini distribution: bucket all issues by display_status
-  dist_buckets = BoardHelper::DISPLAY_STATES.map { |s|
+  dist_buckets = ordered_display_states.map { |s|
     n = all_issues.count { |p| p.display_status == s[:id] }
     [s, n]
   }.select { |_, n| n > 0 }
