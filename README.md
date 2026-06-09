@@ -1,24 +1,32 @@
-# README
+# pgboard
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Read-only Kanban-style board for our JIRA project. See
+[`docs/plans/2026-06-09-pgboard-design.md`](docs/plans/2026-06-09-pgboard-design.md)
+for architecture and
+[`docs/plans/2026-06-09-pgboard-implementation.md`](docs/plans/2026-06-09-pgboard-implementation.md)
+for the build plan.
 
-Things you may want to cover:
+## Run locally
 
-* Ruby version
+```
+cp .env.example .env       # fill in JIRA + Google OAuth secrets
+cp config/pgboard.example.yml config/pgboard.yml
+task dev                   # http://localhost:3000
+```
 
-* System dependencies
+## Tests
 
-* Configuration
+```
+task test
+```
 
-* Database creation
+## Deploy
 
-* Database initialization
+On the Hetzner VM:
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+```
+ssh hetzner
+cd /srv/pgboard
+git pull
+task redeploy
+```
