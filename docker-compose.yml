@@ -3,12 +3,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
+    security_opt:
+      - label=disable
     ports:
       - "3000:3000"
     volumes:
-      - .:/app:z
+      - .:/app
       - bundle:/usr/local/bundle
-      - ./storage:/app/storage:z
+      - ./storage:/app/storage
     environment:
       RAILS_ENV: development
       SOLID_QUEUE_IN_PUMA: "true"
