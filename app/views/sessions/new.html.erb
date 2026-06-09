@@ -1,0 +1,10 @@
+<div class="min-h-screen flex items-center justify-center bg-slate-100">
+  <div class="p-8 bg-white rounded shadow text-center">
+    <h1 class="text-xl font-semibold mb-4">pgboard</h1>
+    <% if flash[:alert] %>
+      <p class="text-red-600 mb-4"><%= flash[:alert] %></p>
+    <% end %>
+    <%= button_to "Sign in with Google", "/auth/google_oauth2",
+                  method: :post, class: "px-4 py-2 bg-blue-600 text-white rounded" %>
+  </div>
+</div>
