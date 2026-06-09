@@ -1,6 +1,6 @@
 <turbo-stream action="morph" target="board-root">
   <template>
-    <div class="flex gap-4">
+    <div class="pg-board" data-board-target="root">
       <% presenter.columns.each do |col| %>
         <%= render partial: "board/column", formats: [:html], locals: { column: col } %>
       <% end %>

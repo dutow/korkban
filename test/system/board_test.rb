@@ -14,7 +14,7 @@ class BoardSystemTest < ApplicationSystemTestCase
   test "logged-in user sees columns and postits" do
     visit "/auth/google_oauth2/callback"
     visit "/"
-    assert_selector ".board-column", minimum: 2
-    assert_selector ".postit", minimum: 4
+    assert_selector ".pg-col", minimum: 2
+    assert_selector ".pg-card", minimum: 4, visible: :all
   end
 end

@@ -15,7 +15,7 @@ class BoardControllerTest < ActionDispatch::IntegrationTest
   test "renders columns for active epics" do
     get root_path
     assert_response :success
-    assert_select ".board-column", count: 2
+    assert_select ".pg-col", count: 2
   end
 
   test "redirects to login when unauthenticated" do
@@ -24,8 +24,8 @@ class BoardControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to "/login"
   end
 
-  test "renders a postit per active issue" do
+  test "renders a card per active issue" do
     get root_path
-    assert_select ".postit"
+    assert_select ".pg-card"
   end
 end

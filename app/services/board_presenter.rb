@@ -2,10 +2,14 @@ class BoardPresenter
   Warning = Struct.new(:issue_key, :status, :reason)
 
   IssuePresenter = Struct.new(:issue, :display_status, :staleness) do
-    def jira_key       = issue.jira_key
-    def summary        = issue.summary
-    def assignee       = issue.assignee_username
-    def jira_status    = issue.jira_status
+    def jira_key        = issue.jira_key
+    def summary         = issue.summary
+    def assignee        = issue.assignee_username
+    def jira_status     = issue.jira_status
+    def issue_type      = issue.issue_type
+    def priority        = issue.priority
+    def created_at_jira = issue.created_at_jira
+    def status_changed_at_jira = issue.status_changed_at_jira
     def transitioned_at = issue.status_changed_at_jira || issue.created_at_jira
   end
 

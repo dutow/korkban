@@ -25,7 +25,7 @@ class MorphSystemTest < ApplicationSystemTestCase
 
   test "morph applied while modal open does not close the modal" do
     visit "/"
-    find(".postit", text: "Fresh task").click
+    find(".pg-card", text: "Fresh task").click
     assert_selector "turbo-frame#modal", text: "Fresh task"
 
     Turbo::StreamsChannel.broadcast_render_to(

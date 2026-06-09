@@ -1,20 +1,124 @@
 <%= turbo_stream_from "board" %>
 
-<header class="flex items-center justify-between p-4 bg-slate-800 text-white">
-  <h1 class="text-lg font-semibold">pgboard</h1>
-  <div class="flex items-center gap-4">
-    <%= render "board/stale_banner", last_sync: @last_sync %>
-    <%= render "board/warning_tray", warnings: @presenter.warnings %>
-    <span class="text-sm"><%= current_user_email %></span>
-    <%= button_to "Logout", "/logout", method: :delete,
-                  class: "text-sm underline" %>
-  </div>
-</header>
+<%
+  all_issues   = @presenter.columns.flat_map(&:all_issues)
+  total_tickets = all_issues.size
+  total_stale  = all_issues.count { |p| %i[somewhat really].include?(p.staleness) }
 
-<main class="p-4 overflow-x-auto" data-controller="filters" id="board-root">
-  <div class="flex gap-4">
+  # unique assignees for people filter
+  assignees = all_issues.map(&:assignee).map(&:to_s).reject(&:empty?).uniq.sort
+%>
+
+<div class="pg-shell"
+     data-controller="board"
+     data-board-statuses-value="[]"
+     data-board-assignees-value="[]"
+     data-board-query-value="">
+
+  <header class="pg-header">
+    <div class="pg-brand">
+      <span class="pg-brand-name">pgboard</span>
+      <span class="pg-brand-sub">Priority queue</span>
+    </div>
+
+    <div class="pg-status-pills" role="group" aria-label="Filter by status">
+      <% BoardHelper::DISPLAY_STATES.each do |s| %>
+        <button type="button"
+                class="pg-pill"
+                data-board-target="statusPill"
+                data-action="board#toggleStatus"
+                data-state="<%= s[:id] %>"
+                data-color="<%= s[:color] %>"
+                data-on="0"
+                style="--pg-state-color:<%= s[:color] %>;"
+                title="Highlight <%= s[:label] %>">
+          <span class="pg-pill-dot" style="background:<%= s[:color] %>;"></span>
+          <span><%= s[:short] %></span>
+        </button>
+      <% end %>
+      <button type="button"
+              class="pg-pill-clear"
+              data-board-target="statusClear"
+              data-action="board#clearStatuses"
+              hidden>✕ clear</button>
+    </div>
+
+    <div class="pg-header-right">
+      <span class="pg-counts">
+        <%= total_tickets %> tickets ·
+        <span class="stale"><%= total_stale %> stale</span>
+      </span>
+
+      <div class="pg-search-wrap">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="#94a3b8" stroke-width="1.6" aria-hidden="true">
+          <circle cx="6" cy="6" r="4.2"/><path d="M9.2 9.2L13 13" stroke-linecap="round"/>
+        </svg>
+        <input type="search"
+               class="pg-search"
+               placeholder="Search tickets…"
+               data-board-target="search"
+               data-action="input->board#search"
+               autocomplete="off">
+      </div>
+
+      <% if assignees.any? %>
+        <div class="pg-people"
+             data-controller="people"
+             data-action="click@window->people#closeIfOutside">
+          <button type="button" class="pg-people-btn"
+                  data-people-target="btn"
+                  data-action="people#toggle"
+                  data-on="0">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#64748b" stroke-width="1.5" aria-hidden="true">
+              <circle cx="7" cy="4.5" r="2.3"/><path d="M2.5 12c0-2.5 2-4 4.5-4s4.5 1.5 4.5 4" stroke-linecap="round"/>
+            </svg>
+            <span data-people-target="label">People</span>
+            <svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="#94a3b8" stroke-width="1.6" aria-hidden="true">
+              <path d="M2 3.5L4.5 6 7 3.5" stroke-linecap="round"/>
+            </svg>
+          </button>
+          <div class="pg-people-menu" data-people-target="menu" hidden>
+            <% assignees.each do |name| %>
+              <% av = avatar_for(name) %>
+              <button type="button"
+                      class="pg-people-row"
+                      data-people-target="row"
+                      data-action="people#toggleRow"
+                      data-name="<%= name %>"
+                      data-on="0">
+                <span class="pg-avatar"
+                      style="background:<%= av[:color] %>;width:22px;height:22px;font-size:9.2px;">
+                  <%= av[:initials] %>
+                </span>
+                <span class="name"><%= av[:name] %></span>
+                <svg class="check" width="14" height="14" viewBox="0 0 14 14" hidden aria-hidden="true">
+                  <path d="M3 7.3l2.5 2.5L11 4.2" stroke="#2563eb" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            <% end %>
+            <button type="button" class="pg-people-clear"
+                    data-people-target="clear"
+                    data-action="people#clear"
+                    hidden>Clear selection</button>
+          </div>
+        </div>
+      <% end %>
+
+      <%= render "board/stale_banner", last_sync: @last_sync %>
+      <%= render "board/warning_tray", warnings: @presenter.warnings %>
+
+      <span class="pg-user"><%= current_user_email %></span>
+      <%= button_to "Logout", "/logout", method: :delete,
+                    form: { style: "display:inline;margin:0;" },
+                    class: "pg-logout-btn" %>
+    </div>
+  </header>
+
+  <main class="pg-board" id="board-root" data-board-target="root">
     <% @presenter.columns.each do |col| %>
       <%= render "board/column", column: col %>
     <% end %>
-  </div>
-</main>
+  </main>
+
+  <div data-board-target="tooltip" class="pg-tt" hidden></div>
+</div>

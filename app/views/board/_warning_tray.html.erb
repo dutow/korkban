@@ -1,6 +1,6 @@
 <% if warnings.any? %>
-  <span class="text-xs text-yellow-300"
+  <span class="pg-warn"
         title="<%= warnings.map { |w| "#{w.issue_key}: #{w.status}" }.join("\n") %>">
-    ⚠ <%= warnings.size %> warnings
+    ⚠ <%= warnings.size %> warning<%= warnings.size == 1 ? "" : "s" %>
   </span>
 <% end %>
