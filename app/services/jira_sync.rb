@@ -20,7 +20,7 @@ class JiraSync
       seen_epic_keys << epic.jira_key
 
       child_jql = %Q{parent = "#{epic.jira_key}"}
-      children = @client.search_all(child_jql, fields: ISSUE_FIELDS)
+      children = @client.search_all(child_jql, fields: ISSUE_FIELDS, expand: "changelog")
       seen_issue_keys = []
       children.each do |ji|
         upsert_issue(ji, epic, now)
@@ -65,8 +65,6 @@ class JiraSync
   def upsert_issue(ji, epic, now)
     issue = Issue.find_or_initialize_by(jira_key: ji.key)
     new_status = ji.fields.dig("status", "name")
-    status_changed = issue.persisted? && issue.jira_status != new_status
-    first_seen = issue.new_record?
 
     issue.assign_attributes(
       epic: epic,
@@ -76,15 +74,23 @@ class JiraSync
       assignee_username: ji.fields.dig("assignee", "displayName") || ji.fields.dig("assignee", "name"),
       priority: priority_int(ji.fields["priority"]),
       created_at_jira: parse_time(ji.fields["created"]) || issue.created_at_jira || now,
+      status_changed_at_jira: last_status_change_at(ji),
       raw_fields: ji.fields,
       last_seen_in_query_at: now,
       removed_at: nil
     )
-    if first_seen || status_changed
-      issue.status_changed_at_jira = now
-    end
     issue.save!
     issue
+  end
+
+  def last_status_change_at(ji)
+    histories = ji.attrs.dig("changelog", "histories") || []
+    times = histories.flat_map do |h|
+      next [] unless h["items"]&.any? { |it| it["field"] == "status" }
+      t = parse_time(h["created"])
+      t ? [t] : []
+    end
+    times.max
   end
 
   def priority_int(p)

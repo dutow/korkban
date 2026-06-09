@@ -13,7 +13,7 @@ class JiraClient
     )
   end
 
-  def search_all(jql, fields: nil)
-    @client.Issue.jql(jql, max_results: PAGE_SIZE, fields: fields)
+  def search_all(jql, fields: nil, expand: nil)
+    @client.Issue.jql(jql, max_results: PAGE_SIZE, fields: fields, expand: expand)
   end
 end
