@@ -24,7 +24,8 @@ tasks:
   test:
     desc: "Run all tests (unit + system)"
     cmds:
-      - docker compose run --rm app bin/rails test test:system
+      - docker compose run --rm app bin/rails test
+      - docker compose run --rm --use-aliases app bin/rails test:system
 
   logs:
     desc: "Tail app logs"

@@ -11,6 +11,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
               url: ENV.fetch("SELENIUM_REMOTE_URL", "http://chromium:4444/wd/hub")
             }
 
-  Capybara.server_host = "0.0.0.0"
-  Capybara.app_host    = "http://#{ENV.fetch("APP_HOSTNAME", "app")}"
+  Capybara.server_host         = "0.0.0.0"
+  Capybara.always_include_port = true
+  Capybara.app_host            = "http://#{ENV.fetch("APP_HOSTNAME", "rails-test")}"
 end

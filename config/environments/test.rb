@@ -34,6 +34,9 @@ Rails.application.configure do
   # Disable request forgery protection in test environment.
   config.action_controller.allow_forgery_protection = false
 
+  # System tests open a WebSocket from the chromium container; allow any origin.
+  config.action_cable.disable_request_forgery_protection = true
+
   # Store uploaded files on the local file system in a temporary directory.
   config.active_storage.service = :test
 

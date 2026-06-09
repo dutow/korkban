@@ -21,6 +21,10 @@ services:
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-changeme}
     depends_on:
       - chromium
+    networks:
+      default:
+        aliases:
+          - rails-test
 
   chromium:
     image: selenium/standalone-chromium:latest
