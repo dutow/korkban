@@ -30,6 +30,10 @@
 
 /public/assets
 
+# Ignore tailwindcss-rails build output.
+/app/assets/builds/*
+!/app/assets/builds/.keep
+
 # Ignore key files for decrypting credentials and more.
 /config/*.key
 
