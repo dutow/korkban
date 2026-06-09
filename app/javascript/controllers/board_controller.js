@@ -99,12 +99,12 @@ export default class extends Controller {
         el.style.background = color
         el.style.borderColor = color
         // recolor inner dot to white when active
-        const dot = el.querySelector(".pg-pill-dot")
+        const dot = el.querySelector(".kb-pill-dot")
         if (dot) dot.style.background = "#fff"
       } else {
         el.style.background = ""
         el.style.borderColor = ""
-        const dot = el.querySelector(".pg-pill-dot")
+        const dot = el.querySelector(".kb-pill-dot")
         if (dot) dot.style.background = color
       }
     })
@@ -127,7 +127,7 @@ export default class extends Controller {
     const activityOn = !!(act.dir && act.days)
     const anyFilter = q.length > 0 || sel.size > 0 || pset.size > 0 || activityOn
 
-    const cards = this.element.querySelectorAll(".pg-card")
+    const cards = this.element.querySelectorAll(".kb-card")
     cards.forEach((c) => {
       const search = c.dataset.search || ""
       const status = c.dataset.displayStatus || ""
@@ -154,17 +154,17 @@ export default class extends Controller {
     })
 
     const hasMatch = (root) => {
-      const inner = root.querySelectorAll(".pg-card")
+      const inner = root.querySelectorAll(".kb-card")
       if (inner.length === 0) return true
       for (const c of inner) if (c.dataset.dim !== "1") return true
       return false
     }
 
-    this.element.querySelectorAll(".pg-stack-wrap").forEach((w) => {
+    this.element.querySelectorAll(".kb-stack-wrap").forEach((w) => {
       w.dataset.dim = (anyFilter && !hasMatch(w)) ? "1" : "0"
     })
 
-    this.element.querySelectorAll(".pg-col").forEach((col) => {
+    this.element.querySelectorAll(".kb-col").forEach((col) => {
       col.dataset.dim = (anyFilter && !hasMatch(col)) ? "1" : "0"
     })
 
@@ -195,19 +195,19 @@ export default class extends Controller {
     const staleColor = ds.tooltipStale === "critical" ? "#fca5a5"
                     : ds.tooltipStale === "stale" ? "#fdba74" : "#e8ecf2"
     this.tooltipTarget.innerHTML = `
-      <div class="pg-tt-row">
-        <span class="pg-tt-id">${ds.tooltipId || ""}</span>
-        <span class="pg-tt-state-pill" style="background:${stateColor}">${ds.tooltipState || ""}</span>
+      <div class="kb-tt-row">
+        <span class="kb-tt-id">${ds.tooltipId || ""}</span>
+        <span class="kb-tt-state-pill" style="background:${stateColor}">${ds.tooltipState || ""}</span>
       </div>
-      <div class="pg-tt-title">${this._esc(ds.tooltipTitle || "")}</div>
-      <div class="pg-tt-grid">
+      <div class="kb-tt-title">${this._esc(ds.tooltipTitle || "")}</div>
+      <div class="kb-tt-grid">
         <span class="lbl">Type</span><span class="val">${this._esc(ds.tooltipType || "—")}</span>
         <span class="lbl">Assignee</span><span class="val">${this._esc(ds.tooltipAssignee || "Unassigned")}</span>
         <span class="lbl">In state</span><span class="val" style="color:${staleColor}">${ds.tooltipDays ? ds.tooltipDays + " days" : "—"}${stale ? " · " + staleClass : ""}</span>
         <span class="lbl">Priority</span><span class="val">${this._esc(ds.tooltipPriority || "Medium")}</span>
         <span class="lbl">Jira status</span><span class="val">${this._esc(ds.tooltipStatusRaw || "—")}</span>
       </div>
-      <div class="pg-tt-hint">Click to open · ↗ Jira</div>
+      <div class="kb-tt-hint">Click to open · ↗ Jira</div>
     `
     this._ttAnchor = card
     this.tooltipTarget.hidden = false

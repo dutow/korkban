@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Pgboard::ConfigTest < ActiveSupport::TestCase
+class Korkban::ConfigTest < ActiveSupport::TestCase
   def fixture_yaml
     <<~YAML
       jira:
@@ -33,7 +33,7 @@ class Pgboard::ConfigTest < ActiveSupport::TestCase
   end
 
   test "loads and exposes typed sections" do
-    cfg = Pgboard::Config.load_from_string(fixture_yaml)
+    cfg = Korkban::Config.load_from_string(fixture_yaml)
     assert_equal ["example.com"], cfg.auth.allowed_domains
     assert_equal 60,              cfg.polling.tick_seconds
     assert_equal "new",           cfg.board.status_map.fetch("To Do")
@@ -43,15 +43,15 @@ class Pgboard::ConfigTest < ActiveSupport::TestCase
 
   test "raises MissingKey when a required key is absent" do
     yaml = fixture_yaml.sub("epic_query: 'project = PG'", "")
-    assert_raises(Pgboard::Config::MissingKey) do
-      Pgboard::Config.load_from_string(yaml)
+    assert_raises(Korkban::Config::MissingKey) do
+      Korkban::Config.load_from_string(yaml)
     end
   end
 
   test "resolves env-backed JIRA credentials" do
     previous = ENV["JIRA_API_TOKEN"]
     ENV["JIRA_API_TOKEN"] = "secret-token"
-    cfg = Pgboard::Config.load_from_string(fixture_yaml)
+    cfg = Korkban::Config.load_from_string(fixture_yaml)
     assert_equal "secret-token", cfg.jira.api_token
   ensure
     ENV["JIRA_API_TOKEN"] = previous

@@ -1,7 +1,7 @@
 require "yaml"
 require "ostruct"
 
-module Pgboard
+module Korkban
   class Config
     class MissingKey < StandardError; end
 

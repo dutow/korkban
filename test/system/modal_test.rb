@@ -14,7 +14,7 @@ class ModalSystemTest < ApplicationSystemTestCase
 
   test "clicking a postit opens the modal frame" do
     visit "/"
-    find(".pg-card", text: "Fresh task").click
+    find(".kb-card", text: "Fresh task").click
     assert_selector "turbo-frame#modal", text: "Fresh task"
   end
 end

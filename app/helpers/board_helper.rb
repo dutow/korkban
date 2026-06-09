@@ -58,8 +58,8 @@ module BoardHelper
 
   def self.swatch_table
     cfg_values =
-      if defined?(PGBOARD_CONFIG) && PGBOARD_CONFIG.board.status_map
-        PGBOARD_CONFIG.board.status_map.values.uniq
+      if defined?(KORKBAN_CONFIG) && KORKBAN_CONFIG.board.status_map
+        KORKBAN_CONFIG.board.status_map.values.uniq
       else
         []
       end
@@ -169,8 +169,8 @@ module BoardHelper
 
   def ordered_display_states
     configured =
-      if defined?(PGBOARD_CONFIG) && PGBOARD_CONFIG.board.status_map
-        PGBOARD_CONFIG.board.status_map.values.uniq
+      if defined?(KORKBAN_CONFIG) && KORKBAN_CONFIG.board.status_map
+        KORKBAN_CONFIG.board.status_map.values.uniq
       else
         DISPLAY_STATES.map { |s| s[:id] }
       end

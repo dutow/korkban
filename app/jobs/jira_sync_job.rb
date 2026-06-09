@@ -3,8 +3,8 @@ class JiraSyncJob < ApplicationJob
 
   def perform
     presence = Presence.singleton
-    active_window = PGBOARD_CONFIG.polling.active_window_minutes.minutes
-    idle_interval = PGBOARD_CONFIG.polling.idle_interval_minutes.minutes
+    active_window = KORKBAN_CONFIG.polling.active_window_minutes.minutes
+    idle_interval = KORKBAN_CONFIG.polling.idle_interval_minutes.minutes
 
     active = presence.last_seen_at && presence.last_seen_at >= Time.current - active_window
 

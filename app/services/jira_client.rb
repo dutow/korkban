@@ -3,7 +3,7 @@ require "jira-ruby"
 class JiraClient
   PAGE_SIZE = 50
 
-  def initialize(cfg: PGBOARD_CONFIG.jira)
+  def initialize(cfg: KORKBAN_CONFIG.jira)
     @client = JIRA::Client.new(
       username:     cfg.email,
       password:     cfg.api_token,

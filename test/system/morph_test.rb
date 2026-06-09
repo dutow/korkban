@@ -25,7 +25,7 @@ class MorphSystemTest < ApplicationSystemTestCase
 
   test "morph applied while modal open does not close the modal" do
     visit "/"
-    find(".pg-card", text: "Fresh task").click
+    find(".kb-card", text: "Fresh task").click
     assert_selector "turbo-frame#modal", text: "Fresh task"
 
     Turbo::StreamsChannel.broadcast_render_to(
@@ -34,9 +34,9 @@ class MorphSystemTest < ApplicationSystemTestCase
       locals: {
         presenter: BoardPresenter.new(
           epics: Epic.active.ordered.includes(:issues),
-          status_map: PGBOARD_CONFIG.board.status_map,
-          new_statuses: PGBOARD_CONFIG.board.new_statuses,
-          done_statuses: PGBOARD_CONFIG.board.done_statuses,
+          status_map: KORKBAN_CONFIG.board.status_map,
+          new_statuses: KORKBAN_CONFIG.board.new_statuses,
+          done_statuses: KORKBAN_CONFIG.board.done_statuses,
           staleness: StalenessCalculator.new(now: Time.current,
                                              somewhat_days: 7, really_days: 21)
         ),

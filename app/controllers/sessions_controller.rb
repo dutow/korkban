@@ -31,7 +31,7 @@ class SessionsController < ApplicationController
   def allowed?(email)
     return false if email.blank?
     domain = email.split("@", 2).last
-    PGBOARD_CONFIG.auth.allowed_emails.include?(email) ||
-      PGBOARD_CONFIG.auth.allowed_domains.include?(domain)
+    KORKBAN_CONFIG.auth.allowed_emails.include?(email) ||
+      KORKBAN_CONFIG.auth.allowed_domains.include?(domain)
   end
 end

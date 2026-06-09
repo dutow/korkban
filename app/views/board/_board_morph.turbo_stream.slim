@@ -1,5 +1,5 @@
 turbo-stream action="morph" target="board-root"
   template
-    .pg-board data-board-target="root"
+    .kb-board data-board-target="root"
       - presenter.columns.each do |col|
         = render partial: "board/column", formats: [:html], locals: { column: col }

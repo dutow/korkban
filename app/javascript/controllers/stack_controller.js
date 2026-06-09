@@ -62,7 +62,7 @@ export default class extends Controller {
 
   _countHits(body) {
     let n = 0
-    body.querySelectorAll(".pg-card").forEach((c) => {
+    body.querySelectorAll(".kb-card").forEach((c) => {
       if (c.dataset.dim !== "1") {
         const isMatch = c.dataset.spotlight === "1"
         if (isMatch) n++
@@ -73,14 +73,14 @@ export default class extends Controller {
 
   _renderHits(btn, trail, open, hits, body) {
     // remove old hits chip
-    const old = btn.querySelector(".pg-stack-hits")
+    const old = btn.querySelector(".kb-stack-hits")
     if (old) old.remove()
     if (!trail) return
     if (!open && hits > 0) {
       trail.hidden = true
       btn.dataset.flag = "1"
       const chip = document.createElement("span")
-      chip.className = "pg-stack-hits"
+      chip.className = "kb-stack-hits"
       chip.innerHTML = `
         <svg width="9" height="9" viewBox="0 0 11 11" fill="none" stroke="#fff" stroke-width="1.8">
           <circle cx="4.5" cy="4.5" r="3"/><path d="M7 7l2.5 2.5" stroke-linecap="round"/>
