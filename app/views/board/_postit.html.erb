@@ -1,0 +1,11 @@
+<% color = { fresh: "bg-white", somewhat: "bg-yellow-100", really: "bg-red-100" }[p.staleness] %>
+<article class="postit <%= color %> rounded shadow-sm p-2 my-1 text-sm"
+         data-jira-key="<%= p.jira_key %>"
+         data-display-status="<%= p.display_status %>"
+         data-assignee="<%= p.assignee %>">
+  <a href="<%= jira_url(p.jira_key) %>" target="_blank" class="font-medium">
+    <%= p.jira_key %>
+  </a>
+  <p class="text-slate-700"><%= p.summary %></p>
+  <p class="text-xs text-slate-500"><%= p.assignee.presence || "Unassigned" %></p>
+</article>

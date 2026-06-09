@@ -1,0 +1,36 @@
+<section class="board-column min-w-[280px] w-72 bg-slate-100 rounded p-2"
+         data-epic-key="<%= column.epic.jira_key %>">
+  <h2 class="font-semibold text-slate-700 mb-2">
+    <%= column.epic.name %>
+    <span class="text-xs text-slate-500">(<%= column.epic.jira_key %>)</span>
+  </h2>
+
+  <% unless column.new_issues.empty? %>
+    <details class="mb-2">
+      <summary class="cursor-pointer text-sm text-slate-600">
+        New (<%= column.new_issues.size %>)
+      </summary>
+      <% column.new_issues.each do |p| %>
+        <%= render "board/postit", p: p %>
+      <% end %>
+    </details>
+  <% end %>
+
+  <% column.middle_groups.each do |display_status, postits| %>
+    <h3 class="text-xs uppercase text-slate-500 mt-2"><%= display_status %></h3>
+    <% postits.each do |p| %>
+      <%= render "board/postit", p: p %>
+    <% end %>
+  <% end %>
+
+  <% unless column.done_issues.empty? %>
+    <details class="mt-2">
+      <summary class="cursor-pointer text-sm text-slate-600">
+        Done (<%= column.done_issues.size %>)
+      </summary>
+      <% column.done_issues.each do |p| %>
+        <%= render "board/postit", p: p %>
+      <% end %>
+    </details>
+  <% end %>
+</section>

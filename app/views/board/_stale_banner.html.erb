@@ -1,0 +1,17 @@
+<% if last_sync.nil? %>
+  <span class="text-xs text-yellow-300" title="No sync yet">No sync yet</span>
+<% else %>
+  <% age_min = ((Time.current - last_sync.finished_at) / 60).to_i %>
+  <% level = age_min > 30 ? :red : age_min > 5 ? :yellow : :green %>
+  <span class="text-xs"
+        title="Last sync: <%= last_sync.finished_at.iso8601 %> (<%= age_min %> min ago)">
+    <% case level %>
+    <% when :green %>
+      <span class="text-green-400">●</span>
+    <% when :yellow %>
+      <span class="text-yellow-300">▲</span>
+    <% else %>
+      <span class="text-red-400">JIRA sync stalled (<%= age_min %> min)</span>
+    <% end %>
+  </span>
+<% end %>

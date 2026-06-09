@@ -1,0 +1,6 @@
+<% if warnings.any? %>
+  <span class="text-xs text-yellow-300"
+        title="<%= warnings.map { |w| "#{w.issue_key}: #{w.status}" }.join("\n") %>">
+    ⚠ <%= warnings.size %> warnings
+  </span>
+<% end %>

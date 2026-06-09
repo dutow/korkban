@@ -1,0 +1,20 @@
+<%= turbo_stream_from "board" %>
+
+<header class="flex items-center justify-between p-4 bg-slate-800 text-white">
+  <h1 class="text-lg font-semibold">pgboard</h1>
+  <div class="flex items-center gap-4">
+    <%= render "board/stale_banner", last_sync: @last_sync %>
+    <%= render "board/warning_tray", warnings: @presenter.warnings %>
+    <span class="text-sm"><%= current_user_email %></span>
+    <%= button_to "Logout", "/logout", method: :delete,
+                  class: "text-sm underline" %>
+  </div>
+</header>
+
+<main class="p-4 overflow-x-auto" data-controller="filters" id="board-root">
+  <div class="flex gap-4">
+    <% @presenter.columns.each do |col| %>
+      <%= render "board/column", column: col %>
+    <% end %>
+  </div>
+</main>
