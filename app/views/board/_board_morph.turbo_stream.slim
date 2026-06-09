@@ -1,5 +1,4 @@
-turbo-stream action="morph" target="board-root"
+turbo-stream action="update" method="morph" target="board-root"
   template
-    .kb-board data-board-target="root"
-      - presenter.columns.each do |col|
-        = render partial: "board/column", formats: [:html], locals: { column: col }
+    - presenter.columns.each do |col|
+      = render partial: "board/column", formats: [:html], locals: { column: col }
