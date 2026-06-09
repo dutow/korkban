@@ -49,10 +49,11 @@ class Pgboard::ConfigTest < ActiveSupport::TestCase
   end
 
   test "resolves env-backed JIRA credentials" do
+    previous = ENV["JIRA_API_TOKEN"]
     ENV["JIRA_API_TOKEN"] = "secret-token"
     cfg = Pgboard::Config.load_from_string(fixture_yaml)
     assert_equal "secret-token", cfg.jira.api_token
   ensure
-    ENV.delete("JIRA_API_TOKEN")
+    ENV["JIRA_API_TOKEN"] = previous
   end
 end
