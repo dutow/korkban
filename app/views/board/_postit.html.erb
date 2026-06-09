@@ -12,7 +12,6 @@
   card_style << "--pg-paper:#{stale[:paper]};"
   card_style << "--pg-avatar-ring:#{stale[:paper]};"
   data_attrs = {
-    turbo_frame: "modal",
     assignee: p.assignee.to_s,
     display_status: p.display_status.to_s,
     staleness: p.staleness.to_s,
@@ -32,10 +31,12 @@
   }
   data_attrs[:critical] = "1" if stale_lvl == "critical"
 %>
-<%= link_to issue_path(p.jira_key),
+<%= link_to jira_url(p.jira_key),
             data: data_attrs,
             class: "pg-card",
-            style: card_style do %>
+            style: card_style,
+            target: "_blank",
+            rel: "noreferrer" do %>
   <div class="pg-card-row1">
     <%= type_icon_svg(p.issue_type, size: 14) %>
     <span class="pg-card-id"><%= p.jira_key %></span>
