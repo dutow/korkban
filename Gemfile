@@ -69,6 +69,8 @@ group :test do
   gem "selenium-webdriver"
 end
 
+gem "slim-rails"
+
 gem "jira-ruby"
 gem "omniauth-google-oauth2"
 gem "omniauth-rails_csrf_protection"

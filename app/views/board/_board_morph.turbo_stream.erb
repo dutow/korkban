@@ -1,9 +1,0 @@
-<turbo-stream action="morph" target="board-root">
-  <template>
-    <div class="pg-board" data-board-target="root">
-      <% presenter.columns.each do |col| %>
-        <%= render partial: "board/column", formats: [:html], locals: { column: col } %>
-      <% end %>
-    </div>
-  </template>
-</turbo-stream>
