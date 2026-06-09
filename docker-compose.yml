@@ -1,0 +1,29 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - bundle:/usr/local/bundle
+      - ./storage:/app/storage
+    environment:
+      RAILS_ENV: development
+      JIRA_BASE_URL: ${JIRA_BASE_URL:-https://example.atlassian.net}
+      JIRA_EMAIL: ${JIRA_EMAIL:-jira@example.com}
+      JIRA_API_TOKEN: ${JIRA_API_TOKEN:-changeme}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-changeme}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-changeme}
+    depends_on:
+      - chromium
+
+  chromium:
+    image: selenium/standalone-chromium:latest
+    shm_size: "2gb"
+    ports:
+      - "4444:4444"
+
+volumes:
+  bundle:
