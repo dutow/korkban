@@ -73,7 +73,7 @@ class JiraSync
       summary: ji.fields["summary"],
       jira_status: new_status,
       issue_type: ji.fields.dig("issuetype", "name"),
-      assignee_username: ji.fields.dig("assignee", "name"),
+      assignee_username: ji.fields.dig("assignee", "displayName") || ji.fields.dig("assignee", "name"),
       priority: priority_int(ji.fields["priority"]),
       created_at_jira: parse_time(ji.fields["created"]) || issue.created_at_jira || now,
       raw_fields: ji.fields,

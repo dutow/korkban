@@ -32,6 +32,10 @@ class BoardPresenter
     @columns ||= @epics.map { |e| build_column(e) }
   end
 
+  def configured_display_statuses
+    @configured_display_statuses ||= @status_map.values.uniq
+  end
+
   def warnings
     columns # force build
     @warnings

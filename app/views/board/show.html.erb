@@ -22,7 +22,8 @@
     </div>
 
     <div class="pg-status-pills" role="group" aria-label="Filter by status">
-      <% BoardHelper::DISPLAY_STATES.each do |s| %>
+      <% @presenter.configured_display_statuses.each do |id| %>
+        <% s = state_meta(id) %>
         <button type="button"
                 class="pg-pill"
                 data-board-target="statusPill"

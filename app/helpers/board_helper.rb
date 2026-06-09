@@ -8,6 +8,17 @@ module BoardHelper
 
   STATE_BY_ID = DISPLAY_STATES.index_by { |s| s[:id] }.freeze
 
+  STATE_FALLBACK_PALETTE = [
+    { color: "#ef4444", tint: "#fef2f2", deep: "#b91c1c" },
+    { color: "#f97316", tint: "#fff7ed", deep: "#c2410c" },
+    { color: "#eab308", tint: "#fefce8", deep: "#a16207" },
+    { color: "#84cc16", tint: "#f7fee7", deep: "#4d7c0f" },
+    { color: "#14b8a6", tint: "#f0fdfa", deep: "#0f766e" },
+    { color: "#06b6d4", tint: "#ecfeff", deep: "#0e7490" },
+    { color: "#a855f7", tint: "#faf5ff", deep: "#7e22ce" },
+    { color: "#ec4899", tint: "#fdf2f8", deep: "#be185d" }
+  ].freeze
+
   TYPE_STYLE = {
     "story" => { color: "#16a34a", shape: :square },
     "task"  => { color: "#2563eb", shape: :square },
@@ -32,7 +43,34 @@ module BoardHelper
   AVATAR_PALETTE = %w[#6366f1 #0d9488 #e11d48 #ea580c #8b5cf6 #0284c7 #16a34a #b45309 #c026d3 #475569].freeze
 
   def state_meta(display_status)
-    STATE_BY_ID[display_status] || { id: display_status, label: display_status.to_s.titleize, short: display_status.to_s.titleize, color: "#94a3b8", tint: "#f1f5f9", deep: "#475569" }
+    STATE_BY_ID[display_status] || begin
+      id = display_status.to_s
+      swatch = BoardHelper.fallback_swatch_for(id)
+      label = id.titleize
+      { id: id, label: label, short: label, **swatch }
+    end
+  end
+
+  def self.fallback_swatch_for(id)
+    table = swatch_table
+    table[id] || STATE_FALLBACK_PALETTE[(table.size + id.bytes.sum) % STATE_FALLBACK_PALETTE.size]
+  end
+
+  def self.swatch_table
+    cfg_values =
+      if defined?(PGBOARD_CONFIG) && PGBOARD_CONFIG.board.status_map
+        PGBOARD_CONFIG.board.status_map.values.uniq
+      else
+        []
+      end
+    if @swatch_table_key != cfg_values
+      @swatch_table_key = cfg_values
+      known = STATE_BY_ID.keys
+      @swatch_table = (cfg_values - known).each_with_index.to_h do |sid, i|
+        [sid, STATE_FALLBACK_PALETTE[i % STATE_FALLBACK_PALETTE.size]]
+      end
+    end
+    @swatch_table
   end
 
   def type_meta(issue_type)
