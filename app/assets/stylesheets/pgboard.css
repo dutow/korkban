@@ -74,7 +74,6 @@ html, body { background: var(--pg-bg); font-family: var(--pg-ui); color: var(--p
 }
 .pg-brand { display: flex; align-items: baseline; gap: 9px; }
 .pg-brand-name { font-size: 18px; font-weight: 800; color: var(--pg-brand-name); letter-spacing: -.4px; }
-.pg-brand-sub { font-size: 13px; color: var(--pg-text-mute); font-weight: 600; }
 
 .pg-status-pills { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .pg-pill {
