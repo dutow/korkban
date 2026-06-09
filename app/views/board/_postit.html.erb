@@ -41,9 +41,6 @@
     <%= type_icon_svg(p.issue_type, size: 14) %>
     <span class="pg-card-id"><%= p.jira_key %></span>
     <span class="pg-card-meta">
-      <span class="pg-step-chip" style="color:<%= state[:deep] %>;background:<%= state[:tint] %>;">
-        <%= step_idx %><span>/<%= step_total %></span>
-      </span>
       <%= priority_flag_svg(p.priority, size: 13) %>
       <% if age_show && days %>
         <span class="pg-age" style="background:<%= stale[:bg] %>;color:<%= stale[:fg] %>;">
