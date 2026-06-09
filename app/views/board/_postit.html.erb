@@ -61,7 +61,11 @@
   </div>
   <div class="pg-ladder">
     <% BoardHelper::DISPLAY_STATES.each_with_index do |s, i| %>
-      <span style="background:<%= i <= step_idx ? s[:color] : '#e7eaee' %>;"></span>
+      <% if i <= step_idx %>
+        <span style="background:<%= s[:color] %>;"></span>
+      <% else %>
+        <span></span>
+      <% end %>
     <% end %>
   </div>
 <% end %>

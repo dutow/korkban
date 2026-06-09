@@ -9,6 +9,16 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
+    <script nonce="<%= content_security_policy_nonce %>">
+      (function () {
+        try {
+          var t = localStorage.getItem("pgboard-theme");
+          if (!t) t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          document.documentElement.dataset.theme = t;
+        } catch (e) {}
+      })();
+    </script>
+
     <%= yield :head %>
 
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>

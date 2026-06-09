@@ -125,6 +125,21 @@
       <%= render "board/stale_banner", last_sync: @last_sync %>
       <%= render "board/warning_tray", warnings: @presenter.warnings %>
 
+      <button type="button"
+              class="pg-theme-btn"
+              data-controller="theme"
+              data-action="theme#toggle"
+              title="Toggle dark / light theme"
+              aria-label="Toggle theme">
+        <svg class="pg-theme-sun" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+          <circle cx="7.5" cy="7.5" r="3"/>
+          <path d="M7.5 1v1.6M7.5 12.4V14M1 7.5h1.6M12.4 7.5H14M2.9 2.9l1.1 1.1M11 11l1.1 1.1M2.9 12.1L4 11M11 4l1.1-1.1"/>
+        </svg>
+        <svg class="pg-theme-moon" width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12.5 9.2A5.3 5.3 0 0 1 5.8 2.5a5.3 5.3 0 1 0 6.7 6.7z"/>
+        </svg>
+      </button>
+
       <span class="pg-user"><%= current_user_email %></span>
       <%= button_to "Logout", "/logout", method: :delete,
                     form: { style: "display:inline;margin:0;" },

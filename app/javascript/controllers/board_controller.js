@@ -67,8 +67,8 @@ export default class extends Controller {
         const dot = el.querySelector(".pg-pill-dot")
         if (dot) dot.style.background = "#fff"
       } else {
-        el.style.background = "#fff"
-        el.style.borderColor = "#e7e9ee"
+        el.style.background = ""
+        el.style.borderColor = ""
         const dot = el.querySelector(".pg-pill-dot")
         if (dot) dot.style.background = color
       }
