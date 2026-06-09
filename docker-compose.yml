@@ -6,11 +6,12 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - .:/app
+      - .:/app:z
       - bundle:/usr/local/bundle
-      - ./storage:/app/storage
+      - ./storage:/app/storage:z
     environment:
       RAILS_ENV: development
+      SOLID_QUEUE_IN_PUMA: "true"
       JIRA_BASE_URL: ${JIRA_BASE_URL:-https://example.atlassian.net}
       JIRA_EMAIL: ${JIRA_EMAIL:-jira@example.com}
       JIRA_API_TOKEN: ${JIRA_API_TOKEN:-changeme}

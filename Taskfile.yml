@@ -4,7 +4,7 @@ tasks:
   dev:
     desc: "Run dev server via docker compose"
     cmds:
-      - docker compose up app
+      - docker compose up --build app
 
   shell:
     desc: "Open a bash shell in the dev container"
