@@ -108,6 +108,21 @@ export default class extends Controller {
       }
     })
 
+    const hasMatch = (root) => {
+      const inner = root.querySelectorAll(".pg-card")
+      if (inner.length === 0) return true
+      for (const c of inner) if (c.dataset.dim !== "1") return true
+      return false
+    }
+
+    this.element.querySelectorAll(".pg-stack-wrap").forEach((w) => {
+      w.dataset.dim = (anyFilter && !hasMatch(w)) ? "1" : "0"
+    })
+
+    this.element.querySelectorAll(".pg-col").forEach((col) => {
+      col.dataset.dim = (anyFilter && !hasMatch(col)) ? "1" : "0"
+    })
+
     document.querySelectorAll("[data-controller~=stack]").forEach((el) => {
       if (el.stackController) el.stackController.refreshHits()
     })

@@ -274,6 +274,8 @@ html, body { background: var(--pg-bg); font-family: var(--pg-ui); color: var(--p
 }
 .pg-card:hover { transform: translateY(-3px); box-shadow: var(--pg-card-shadow-hover); }
 .pg-card[data-dim="1"] { opacity: .28; }
+.pg-stack-wrap[data-dim="1"] { opacity: .28; transition: opacity .2s; }
+.pg-col[data-dim="1"] { opacity: .35; transition: opacity .2s; }
 .pg-card[data-spotlight="1"] { box-shadow: 0 0 0 2px #1e293b, 0 8px 20px rgba(0,0,0,.18); }
 .pg-card[data-critical="1"] { box-shadow: 0 0 0 3px rgba(239,68,68,.12); }
 .pg-card[data-hidden="1"] { display: none; }
