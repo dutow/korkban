@@ -94,6 +94,7 @@ module Pgboard
     class BoardSection
       def initialize(h) = @h = h
       def epic_query  = @h["epic_query"]
+      def unplanned_query = @h["unplanned_query"]
       def users       = (@h["users"] || []).map { |u| OpenStruct.new(u) }
       def status_map  = @h["status_map"]
       def new_statuses  = @h["new_statuses"]

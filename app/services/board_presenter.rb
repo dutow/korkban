@@ -19,8 +19,11 @@ class BoardPresenter
     end
   end
 
-  def initialize(epics:, status_map:, new_statuses:, done_statuses:, staleness:)
+  UNPLANNED_EPIC = Struct.new(:jira_key, :name).new("UNPLANNED", "Unplanned")
+
+  def initialize(epics:, status_map:, new_statuses:, done_statuses:, staleness:, orphan_issues: [])
     @epics = epics
+    @orphan_issues = orphan_issues
     @status_map = status_map
     @new_statuses = new_statuses
     @done_statuses = done_statuses
@@ -29,7 +32,12 @@ class BoardPresenter
   end
 
   def columns
-    @columns ||= @epics.map { |e| build_column(e) }
+    @columns ||= begin
+      cols = @epics.map { |e| build_column(e, e.issues.reject { |i| i.removed_at }) }
+      orphans = @orphan_issues.reject { |i| i.removed_at }
+      cols.unshift(build_column(UNPLANNED_EPIC, orphans)) if orphans.any?
+      cols
+    end
   end
 
   def configured_display_statuses
@@ -43,8 +51,8 @@ class BoardPresenter
 
   private
 
-  def build_column(epic)
-    presented = epic.issues.select { |i| i.removed_at.nil? }.map { |i| present(i, epic) }
+  def build_column(epic, issues)
+    presented = issues.map { |i| present(i) }
     sorted = presented.sort_by { |p| p.transitioned_at || Time.at(0) }
 
     new_group  = sorted.select { |p| @new_statuses.include?(p.display_status) }
@@ -55,7 +63,7 @@ class BoardPresenter
     Column.new(epic, new_group, middle_groups, done_group)
   end
 
-  def present(issue, epic)
+  def present(issue)
     display = @status_map[issue.jira_status]
     if display.nil?
       @warnings << Warning.new(issue.jira_key, issue.jira_status, "unmapped")

@@ -117,6 +117,66 @@ class JiraSyncTest < ActiveSupport::TestCase
     assert_equal Time.parse(created_at), issue.created_at_jira
   end
 
+  test "upserts orphan issues from unplanned_query with nil epic" do
+    stub_request(:get, %r{/search}).to_return do |req|
+      decoded = CGI.unescape(req.uri.to_s)
+      body = case decoded
+             when /parent is EMPTY/i
+               { "issues" => [
+                   { "key" => "PG-77",
+                     "fields" => { "summary" => "Loose ticket",
+                                   "status" => { "name" => "In Progress" },
+                                   "issuetype" => { "name" => "Task" } } }
+                 ], "total" => 1, "startAt" => 0, "maxResults" => 50 }
+             else
+               { "issues" => [], "total" => 0, "startAt" => 0, "maxResults" => 50 }
+             end
+      { status: 200, body: body.to_json,
+        headers: { "Content-Type" => "application/json" } }
+    end
+
+    JiraSync.new(
+      epic_query: 'project = PG',
+      unplanned_query: 'project = PG AND parent is EMPTY'
+    ).run!
+
+    orphan = Issue.find_by!(jira_key: "PG-77")
+    assert_nil orphan.epic_id
+    assert_equal 1, Issue.orphan.active.count
+  end
+
+  test "marks previously-seen orphans as removed when they fall out of the query" do
+    stale = Issue.create!(
+      jira_key: "PG-66", epic: nil, issue_type: "Task",
+      summary: "Gone", jira_status: "Done"
+    )
+
+    stub_request(:get, %r{/search}).to_return(
+      status: 200,
+      body: { "issues" => [], "total" => 0, "startAt" => 0, "maxResults" => 50 }.to_json,
+      headers: { "Content-Type" => "application/json" }
+    )
+
+    JiraSync.new(
+      epic_query: 'project = PG',
+      unplanned_query: 'project = PG AND parent is EMPTY'
+    ).run!
+
+    assert_not_nil stale.reload.removed_at
+  end
+
+  test "skips unplanned fetch when unplanned_query is blank" do
+    stub_request(:get, %r{/search}).to_return(
+      status: 200,
+      body: { "issues" => [], "total" => 0, "startAt" => 0, "maxResults" => 50 }.to_json,
+      headers: { "Content-Type" => "application/json" }
+    )
+
+    JiraSync.new(epic_query: 'project = PG', unplanned_query: nil).run!
+
+    assert_requested(:get, %r{/search}, times: 1)
+  end
+
   test "records a SyncRun on success" do
     stub_request(:get, %r{/search}).to_return(
       status: 200,

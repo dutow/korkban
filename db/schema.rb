@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_09_183225) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_10_000000) do
   create_table "board_snapshots", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -35,7 +35,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_09_183225) do
     t.string "assignee_username"
     t.datetime "created_at", null: false
     t.datetime "created_at_jira"
-    t.integer "epic_id", null: false
+    t.integer "epic_id"
     t.string "issue_type", null: false
     t.string "jira_key", null: false
     t.string "jira_status", null: false

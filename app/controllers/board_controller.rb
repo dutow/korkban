@@ -4,6 +4,7 @@ class BoardController < ApplicationController
   def show
     @presenter = BoardPresenter.new(
       epics: Epic.active.ordered.includes(:issues),
+      orphan_issues: Issue.active.orphan,
       status_map: PGBOARD_CONFIG.board.status_map,
       new_statuses: PGBOARD_CONFIG.board.new_statuses,
       done_statuses: PGBOARD_CONFIG.board.done_statuses,

@@ -2,8 +2,11 @@ class JiraSync
   EPIC_FIELDS  = %w[summary status priority].freeze
   ISSUE_FIELDS = %w[summary status issuetype assignee priority created].freeze
 
-  def initialize(epic_query: PGBOARD_CONFIG.board.epic_query, client: JiraClient.new)
+  def initialize(epic_query: PGBOARD_CONFIG.board.epic_query,
+                 unplanned_query: PGBOARD_CONFIG.board.unplanned_query,
+                 client: JiraClient.new)
     @epic_query = epic_query
+    @unplanned_query = unplanned_query
     @client = client
   end
 
@@ -31,6 +34,17 @@ class JiraSync
     end
 
     Epic.active.where.not(jira_key: seen_epic_keys).update_all(removed_at: now)
+
+    if @unplanned_query.present?
+      orphans = @client.search_all(@unplanned_query, fields: ISSUE_FIELDS, expand: "changelog")
+      seen_orphan_keys = []
+      orphans.each do |ji|
+        upsert_issue(ji, nil, now)
+        seen_orphan_keys << ji.key
+      end
+      Issue.active.orphan.where.not(jira_key: seen_orphan_keys).update_all(removed_at: now)
+      fetched += orphans.size
+    end
 
     run.update!(finished_at: Time.current, ok: true, fetched_count: fetched)
     BoardSnapshot.bump!
@@ -105,6 +119,7 @@ class JiraSync
   def build_presenter
     BoardPresenter.new(
       epics: Epic.active.ordered.includes(:issues),
+      orphan_issues: Issue.active.orphan,
       status_map: PGBOARD_CONFIG.board.status_map,
       new_statuses: PGBOARD_CONFIG.board.new_statuses,
       done_statuses: PGBOARD_CONFIG.board.done_statuses,

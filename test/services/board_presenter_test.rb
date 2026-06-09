@@ -10,9 +10,10 @@ class BoardPresenterTest < ActiveSupport::TestCase
     "Done" => "done"
   }
 
-  def build_presenter
+  def build_presenter(orphan_issues: [])
     BoardPresenter.new(
       epics: Epic.active.ordered.includes(:issues),
+      orphan_issues: orphan_issues,
       status_map: STATUS_MAP,
       new_statuses: ["new"],
       done_statuses: ["done"],
@@ -39,6 +40,25 @@ class BoardPresenterTest < ActiveSupport::TestCase
   test "warnings include unmapped statuses" do
     warnings = build_presenter.warnings
     assert_includes warnings.map(&:issue_key), "PG-14"
+  end
+
+  test "unplanned column is prepended when orphans are present" do
+    orphan = Issue.new(
+      jira_key: "PG-99",
+      summary: "Loose ticket",
+      jira_status: "In Progress",
+      issue_type: "Task",
+      created_at_jira: 2.days.ago,
+      status_changed_at_jira: 1.day.ago
+    )
+    cols = build_presenter(orphan_issues: [orphan]).columns
+    assert_equal %w[UNPLANNED PG-1 PG-2], cols.map { |c| c.epic.jira_key }
+    assert_equal ["PG-99"], cols.first.all_issues.map(&:jira_key)
+  end
+
+  test "unplanned column is not rendered when no orphans" do
+    cols = build_presenter.columns
+    assert_not_includes cols.map { |c| c.epic.jira_key }, "UNPLANNED"
   end
 
   test "staleness bucket is attached per issue" do
