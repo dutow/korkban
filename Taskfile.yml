@@ -30,3 +30,14 @@ tasks:
     desc: "Tail app logs"
     cmds:
       - docker compose logs -f app
+
+  redeploy:
+    desc: "Rebuild and restart the prod stack (run on the Hetzner box after git pull)"
+    cmds:
+      - docker compose -f docker-compose.prod.yml up -d --build
+      - docker compose -f docker-compose.prod.yml exec app bin/rails db:migrate
+
+  prod-logs:
+    desc: "Tail prod app logs"
+    cmds:
+      - docker compose -f docker-compose.prod.yml logs -f app
