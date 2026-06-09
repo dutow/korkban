@@ -96,6 +96,26 @@ html, body { background: var(--pg-bg); font-family: var(--pg-ui); color: var(--p
   padding: 4px;
 }
 
+.pg-activity-pills {
+  display: inline-flex; align-items: center;
+  background: var(--pg-input-bg); border: 1px solid var(--pg-border-strong);
+  border-radius: 9px; padding: 2px; gap: 1px;
+}
+.pg-act-pill {
+  border: none; cursor: pointer; background: transparent;
+  font: 600 11.5px/1 var(--pg-ui); color: var(--pg-text-soft);
+  padding: 5px 10px; border-radius: 7px;
+  transition: background .12s, color .12s;
+}
+.pg-act-pill:hover { background: var(--pg-input-hover); }
+.pg-act-pill[data-on="1"] { background: #1e293b; color: #fff; }
+[data-theme="dark"] .pg-act-pill[data-on="1"] { background: #e2e8f0; color: #0f172a; }
+.pg-activity-sep {
+  width: 1px; align-self: stretch;
+  background: var(--pg-border-strong);
+  margin: 3px 4px;
+}
+
 .pg-header-right { margin-left: auto; display: flex; align-items: center; gap: 11px; flex-wrap: wrap; }
 .pg-counts { font-size: 11.5px; color: var(--pg-text-mute); font-weight: 600; }
 .pg-counts .stale { color: #c2410c; }

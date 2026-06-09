@@ -4,16 +4,18 @@ import { Controller } from "@hotwired/stimulus"
 // people-filter (set from the people controller), and hover tooltip.
 // Each card has data-search/data-assignee/data-display-status driving the match.
 export default class extends Controller {
-  static targets = ["statusPill", "statusClear", "search", "root", "tooltip"]
+  static targets = ["statusPill", "statusClear", "activityPill", "activityClear", "search", "root", "tooltip"]
   static values = {
     statuses: Array,
     assignees: Array,
-    query: String
+    query: String,
+    activity: Object
   }
 
   connect() {
     this.loadFromHash()
     this.syncStatusUI()
+    this.syncActivityUI()
     if (this.hasSearchTarget) this.searchTarget.value = this.queryValue
     this.apply()
     this._onWinResize = () => this._positionTooltip()
@@ -52,6 +54,39 @@ export default class extends Controller {
     this.apply()
   }
 
+  // ---------- activity pills ----------
+  toggleActivity(event) {
+    const el = event.currentTarget
+    const dir = el.dataset.dir
+    const days = parseInt(el.dataset.days, 10)
+    const cur = this.activityValue || {}
+    if (cur.dir === dir && cur.days === days) {
+      this.activityValue = {}
+    } else {
+      this.activityValue = { dir, days }
+    }
+    this.persist()
+    this.syncActivityUI()
+    this.apply()
+  }
+
+  clearActivity() {
+    this.activityValue = {}
+    this.persist()
+    this.syncActivityUI()
+    this.apply()
+  }
+
+  syncActivityUI() {
+    const act = this.activityValue || {}
+    const on = !!(act.dir && act.days)
+    this.activityPillTargets.forEach((el) => {
+      const match = on && el.dataset.dir === act.dir && parseInt(el.dataset.days, 10) === act.days
+      el.dataset.on = match ? "1" : "0"
+    })
+    if (this.hasActivityClearTarget) this.activityClearTarget.hidden = !on
+  }
+
   syncStatusUI() {
     const sel = new Set(this.statusesValue)
     const anyOn = sel.size > 0
@@ -88,20 +123,30 @@ export default class extends Controller {
     const q = (this.queryValue || "").trim().toLowerCase()
     const sel = new Set(this.statusesValue)
     const pset = new Set(this.assigneesValue)
-    const anyFilter = q.length > 0 || sel.size > 0 || pset.size > 0
+    const act = this.activityValue || {}
+    const activityOn = !!(act.dir && act.days)
+    const anyFilter = q.length > 0 || sel.size > 0 || pset.size > 0 || activityOn
 
     const cards = this.element.querySelectorAll(".pg-card")
     cards.forEach((c) => {
       const search = c.dataset.search || ""
       const status = c.dataset.displayStatus || ""
       const assignee = c.dataset.assignee || ""
+      const dsuRaw = c.dataset.daysSinceChange
+      const dsu = dsuRaw === "" || dsuRaw == null ? null : parseInt(dsuRaw, 10)
       const matchQ = !q || search.includes(q)
       const matchS = sel.size === 0 || sel.has(status)
       const matchP = pset.size === 0 || pset.has(assignee)
-      const match = matchQ && matchS && matchP
+      let matchA = true
+      if (activityOn) {
+        if (dsu == null || Number.isNaN(dsu)) matchA = false
+        else if (act.dir === "newer") matchA = dsu <= act.days
+        else matchA = dsu > act.days
+      }
+      const match = matchQ && matchS && matchP && matchA
       if (anyFilter) {
         c.dataset.dim = match ? "0" : "1"
-        c.dataset.spotlight = (match && (sel.size > 0 || pset.size > 0 || q.length > 0)) ? "1" : "0"
+        c.dataset.spotlight = match ? "1" : "0"
       } else {
         c.dataset.dim = "0"
         c.dataset.spotlight = "0"
@@ -195,7 +240,8 @@ export default class extends Controller {
     const state = {
       q: this.queryValue,
       s: this.statusesValue,
-      a: this.assigneesValue
+      a: this.assigneesValue,
+      v: this.activityValue
     }
     location.hash = encodeURIComponent(JSON.stringify(state))
   }
@@ -207,6 +253,7 @@ export default class extends Controller {
       this.queryValue = state.q || ""
       this.statusesValue = state.s || []
       this.assigneesValue = state.a || []
+      this.activityValue = state.v || {}
     } catch {}
   }
 }

@@ -16,7 +16,8 @@
      data-controller="board"
      data-board-statuses-value="[]"
      data-board-assignees-value="[]"
-     data-board-query-value="">
+     data-board-query-value=""
+     data-board-activity-value="{}">
 
   <header class="pg-header">
     <div class="pg-brand">
@@ -45,6 +46,30 @@
               data-board-target="statusClear"
               data-action="board#clearStatuses"
               hidden>✕ clear</button>
+    </div>
+
+    <div class="pg-activity-pills" role="group" aria-label="Highlight by activity">
+      <% @activity_days.each do |days| %>
+        <button type="button"
+                class="pg-act-pill"
+                data-board-target="activityPill"
+                data-action="board#toggleActivity"
+                data-dir="newer"
+                data-days="<%= days %>"
+                data-on="0"
+                title="Highlight tickets updated within <%= pluralize(days, "day") %>">≤<%= days %>d</button>
+      <% end %>
+      <span class="pg-activity-sep" aria-hidden="true"></span>
+      <% @activity_days.each do |days| %>
+        <button type="button"
+                class="pg-act-pill"
+                data-board-target="activityPill"
+                data-action="board#toggleActivity"
+                data-dir="older"
+                data-days="<%= days %>"
+                data-on="0"
+                title="Highlight tickets not updated in over <%= pluralize(days, "day") %>">≥<%= days %>d</button>
+      <% end %>
     </div>
 
     <div class="pg-header-right">

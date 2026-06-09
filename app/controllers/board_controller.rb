@@ -1,4 +1,6 @@
 class BoardController < ApplicationController
+  ACTIVITY_HIGHLIGHT_DAYS = [1, 3, 7].freeze
+
   def show
     @presenter = BoardPresenter.new(
       epics: Epic.active.ordered.includes(:issues),
@@ -15,5 +17,6 @@ class BoardController < ApplicationController
       )
     )
     @last_sync = SyncRun.ok.most_recent.first
+    @activity_days = ACTIVITY_HIGHLIGHT_DAYS
   end
 end

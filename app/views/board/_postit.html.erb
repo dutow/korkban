@@ -15,6 +15,7 @@
     assignee: p.assignee.to_s,
     display_status: p.display_status.to_s,
     staleness: p.staleness.to_s,
+    days_since_change: days.to_s,
     search: [p.jira_key, p.summary, p.assignee, state[:label]].compact.join(" ").downcase,
     board_target: "card",
     action: "mouseenter->board#showTooltip mouseleave->board#hideTooltip",
