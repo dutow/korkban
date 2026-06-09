@@ -13,11 +13,11 @@
     {"id": 16, "subject": "Task 9: BoardController + views", "status": "completed", "blockedBy": [12, 15]},
     {"id": 17, "subject": "Task 10: JiraSync service", "status": "completed", "blockedBy": [13, 15, 16]},
     {"id": 18, "subject": "Task 11: JiraSyncJob recurring", "status": "completed", "blockedBy": [17]},
-    {"id": 19, "subject": "Task 12: IssuesController + modal frame", "status": "pending", "blockedBy": [16]},
-    {"id": 20, "subject": "Task 13: Stimulus controllers", "status": "pending", "blockedBy": [19]},
-    {"id": 21, "subject": "Task 14: System tests", "status": "pending", "blockedBy": [19, 20]},
-    {"id": 22, "subject": "Task 15: Production Docker + Caddy", "status": "pending", "blockedBy": [7]},
-    {"id": 23, "subject": "Task 16: Redeploy task + README", "status": "pending", "blockedBy": [22]}
+    {"id": 19, "subject": "Task 12: IssuesController + modal frame", "status": "completed", "blockedBy": [16]},
+    {"id": 20, "subject": "Task 13: Stimulus controllers", "status": "completed", "blockedBy": [19]},
+    {"id": 21, "subject": "Task 14: System tests", "status": "completed", "blockedBy": [19, 20]},
+    {"id": 22, "subject": "Task 15: Production Docker + Caddy", "status": "completed", "blockedBy": [7]},
+    {"id": 23, "subject": "Task 16: Redeploy task + README", "status": "completed", "blockedBy": [22]}
   ],
-  "lastUpdated": "2026-06-09T18:10:00Z"
+  "lastUpdated": "2026-06-09T19:30:00Z"
 }
