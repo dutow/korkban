@@ -1,0 +1,23 @@
+{
+  "planPath": "docs/plans/2026-06-09-pgboard-implementation.md",
+  "tasks": [
+    {"id": 7,  "subject": "Task 0: Generate Rails app", "status": "pending"},
+    {"id": 8,  "subject": "Task 1: Dev Docker setup", "status": "pending", "blockedBy": [7]},
+    {"id": 9,  "subject": "Task 2: Taskfile scaffolding", "status": "pending", "blockedBy": [8]},
+    {"id": 10, "subject": "Task 3: Config singleton", "status": "pending", "blockedBy": [8]},
+    {"id": 11, "subject": "Task 4: Domain models + migrations", "status": "pending", "blockedBy": [10]},
+    {"id": 12, "subject": "Task 5: Authentication (OmniAuth + allow-list)", "status": "pending", "blockedBy": [10, 11]},
+    {"id": 13, "subject": "Task 6: JiraClient facade", "status": "pending", "blockedBy": [10]},
+    {"id": 14, "subject": "Task 7: StalenessCalculator", "status": "pending", "blockedBy": [10]},
+    {"id": 15, "subject": "Task 8: BoardPresenter", "status": "pending", "blockedBy": [11, 14]},
+    {"id": 16, "subject": "Task 9: BoardController + views", "status": "pending", "blockedBy": [12, 15]},
+    {"id": 17, "subject": "Task 10: JiraSync service", "status": "pending", "blockedBy": [13, 15, 16]},
+    {"id": 18, "subject": "Task 11: JiraSyncJob recurring", "status": "pending", "blockedBy": [17]},
+    {"id": 19, "subject": "Task 12: IssuesController + modal frame", "status": "pending", "blockedBy": [16]},
+    {"id": 20, "subject": "Task 13: Stimulus controllers", "status": "pending", "blockedBy": [19]},
+    {"id": 21, "subject": "Task 14: System tests", "status": "pending", "blockedBy": [19, 20]},
+    {"id": 22, "subject": "Task 15: Production Docker + Caddy", "status": "pending", "blockedBy": [7]},
+    {"id": 23, "subject": "Task 16: Redeploy task + README", "status": "pending", "blockedBy": [22]}
+  ],
+  "lastUpdated": "2026-06-09T00:00:00Z"
+}
