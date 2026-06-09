@@ -33,4 +33,10 @@ class StalenessCalculatorTest < ActiveSupport::TestCase
                  calc.bucket(transitioned_at: Time.utc(2024, 1, 1),
                              display_status: "new")
   end
+
+  test "done issues are always fresh regardless of age" do
+    assert_equal :fresh,
+                 calc.bucket(transitioned_at: Time.utc(2024, 1, 1),
+                             display_status: "done")
+  end
 end
