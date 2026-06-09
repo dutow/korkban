@@ -2,6 +2,8 @@ require "test_helper"
 
 class IssueTest < ActiveSupport::TestCase
   setup do
+    Issue.delete_all
+    Epic.delete_all
     @epic = Epic.create!(jira_key: "PG-1", name: "Epic", priority: 1, jira_status: "To Do")
   end
 
