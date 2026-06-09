@@ -1,0 +1,9 @@
+<turbo-stream action="morph" target="board-root">
+  <template>
+    <div class="flex gap-4">
+      <% presenter.columns.each do |col| %>
+        <%= render partial: "board/column", formats: [:html], locals: { column: col } %>
+      <% end %>
+    </div>
+  </template>
+</turbo-stream>
