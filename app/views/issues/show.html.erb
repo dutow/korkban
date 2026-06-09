@@ -1,0 +1,20 @@
+<%= turbo_frame_tag "modal" do %>
+  <div class="fixed inset-0 bg-black/40 flex items-center justify-center"
+       data-controller="modal" data-action="click->modal#closeIfBackdrop">
+    <div class="bg-white rounded p-6 max-w-lg w-full">
+      <div class="flex items-center justify-between mb-2">
+        <a href="<%= jira_url(@issue.jira_key) %>" target="_blank"
+           class="font-semibold text-blue-600"><%= @issue.jira_key %></a>
+        <a href="#" data-action="click->modal#close" class="text-slate-500">✕</a>
+      </div>
+      <h2 class="text-lg mb-2"><%= @issue.summary %></h2>
+      <dl class="text-sm text-slate-700 space-y-1">
+        <div><dt class="inline font-semibold">Status:</dt> <dd class="inline"><%= @issue.jira_status %></dd></div>
+        <div><dt class="inline font-semibold">Assignee:</dt> <dd class="inline"><%= @issue.assignee_username || "Unassigned" %></dd></div>
+        <div><dt class="inline font-semibold">Type:</dt> <dd class="inline"><%= @issue.issue_type %></dd></div>
+        <div><dt class="inline font-semibold">Created:</dt> <dd class="inline"><%= @issue.created_at_jira&.iso8601 %></dd></div>
+        <div><dt class="inline font-semibold">Status changed:</dt> <dd class="inline"><%= @issue.status_changed_at_jira&.iso8601 %></dd></div>
+      </dl>
+    </div>
+  </div>
+<% end %>

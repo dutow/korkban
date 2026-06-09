@@ -4,4 +4,5 @@ Rails.application.routes.draw do
   get  "/auth/:provider/callback", to: "sessions#create"
   get  "/auth/failure",            to: "sessions#failure"
   delete "/logout", to: "sessions#destroy"
+  get "/issues/:jira_key", to: "issues#show", as: :issue, constraints: { jira_key: /[^\/]+/ }
 end
