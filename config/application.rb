@@ -26,5 +26,8 @@ module Pgboard
 
     config.time_zone = "UTC"
     config.active_record.default_timezone = :utc
+
+    config.autoload_paths += %W[#{config.root}/app/lib]
+    config.eager_load_paths += %W[#{config.root}/app/lib]
   end
 end

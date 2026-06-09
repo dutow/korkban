@@ -1,0 +1,58 @@
+require "test_helper"
+
+class Pgboard::ConfigTest < ActiveSupport::TestCase
+  def fixture_yaml
+    <<~YAML
+      jira:
+        base_url_env: JIRA_BASE_URL
+        email_env: JIRA_EMAIL
+        api_token_env: JIRA_API_TOKEN
+      auth:
+        allowed_domains: ["example.com"]
+        allowed_emails: []
+        google_client_id_env: GOOGLE_CLIENT_ID
+        google_client_secret_env: GOOGLE_CLIENT_SECRET
+      polling:
+        tick_seconds: 60
+        active_window_minutes: 5
+        idle_interval_minutes: 60
+      board:
+        epic_query: 'project = PG'
+        users:
+          - { jira_username: "alice", display_name: "Alice" }
+        status_map:
+          "To Do": "new"
+          "Done":  "done"
+        new_statuses:  ["new"]
+        done_statuses: ["done"]
+        staleness:
+          somewhat_days: 7
+          really_days:   21
+        ignore_staleness_for_new_issues: true
+    YAML
+  end
+
+  test "loads and exposes typed sections" do
+    cfg = Pgboard::Config.load_from_string(fixture_yaml)
+    assert_equal ["example.com"], cfg.auth.allowed_domains
+    assert_equal 60,              cfg.polling.tick_seconds
+    assert_equal "new",           cfg.board.status_map.fetch("To Do")
+    assert_equal 7,               cfg.board.staleness.somewhat_days
+    assert_equal "alice",         cfg.board.users.first.jira_username
+  end
+
+  test "raises MissingKey when a required key is absent" do
+    yaml = fixture_yaml.sub("epic_query: 'project = PG'", "")
+    assert_raises(Pgboard::Config::MissingKey) do
+      Pgboard::Config.load_from_string(yaml)
+    end
+  end
+
+  test "resolves env-backed JIRA credentials" do
+    ENV["JIRA_API_TOKEN"] = "secret-token"
+    cfg = Pgboard::Config.load_from_string(fixture_yaml)
+    assert_equal "secret-token", cfg.jira.api_token
+  ensure
+    ENV.delete("JIRA_API_TOKEN")
+  end
+end
