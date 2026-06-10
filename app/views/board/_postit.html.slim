@@ -17,11 +17,11 @@
     = type_icon_svg(p.issue_type, size: 14)
     span.kb-card-id= p.jira_key
     span.kb-card-meta
-      = priority_flag_svg(p.priority, size: 13)
-      - if age_show && days
+      - if days
         span.kb-age style="background:#{stale[:bg]};color:#{stale[:fg]};"
           span.dot style="background:#{stale[:dot]};"
           | #{days}d
+      = priority_flag_svg(p.priority, size: 13)
   .kb-card-title= p.summary
   .kb-card-row2
     span.kb-card-avatar-wrap
